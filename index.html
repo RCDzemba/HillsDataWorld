@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Analytics - Hills Data World</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #495057;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo::before {
+            content: "";
+            margin-right: 10px;
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #6c757d;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #495057;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+        }
+
+        /* Hero Section */
+        .analytics-hero {
+            background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+            padding: 160px 0 80px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analytics-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23adb5bd" stroke-width="1" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .analytics-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            animation: fadeInUp 1s ease;
+        }
+
+        .analytics-hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        /* Models Section */
+        .models-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #495057;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: #6c757d;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .model-category {
+            margin-bottom: 5rem;
+        }
+
+        .model-category h3 {
+            font-size: 1.8rem;
+            color: #495057;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .model-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .model-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-color: #ced4da;
+        }
+
+        .model-card h4 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #495057;
+        }
+
+        .model-card p {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .model-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .model-status {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-planned {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-development {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-production {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        /* Model Details Section */
+        .model-details {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .details-container {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .details-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .details-header h3 {
+            font-size: 1.8rem;
+            color: #495057;
+        }
+
+        .details-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .details-column h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #495057;
+        }
+
+        .details-list {
+            list-style: none;
+        }
+
+        .details-list li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #6c757d;
+        }
+
+        .details-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #495057;
+            font-weight: bold;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-item {
+            background: #e9ecef;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #495057;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #495057;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: #f8f9fa;
+        }
+
+        /* Footer */
+        footer {
+            background: #212529;
+            color: #adb5bd;
+            padding: 40px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #adb5bd;
+            text-decoration: none;
+            line-height: 1.8;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #495057;
+            padding-top: 1rem;
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .analytics-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .analytics-hero p {
+                font-size: 1.1rem;
+            }
+            
+            .details-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        
+        
+        <nav class="container">
+            <a href="hills_data_world_website.html" class="logo">
+                  <img src="Hillsdataworldlogo2.png" alt="Hills Data World logo" width="200" height="auto">
+                  <span class="sr-only"></span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="Services.html">Services</a></li>
+                <li><a href="Featurespage.html">Features</a></li>
+                <li><a href="predictiveModelspage.html">Predictive Models</a></li>
+                <li><a href="Contactpage.html">Contact</a></li>
+            </ul>
+            <a href="#contact" class="cta-button">Get Started</a>
+        </nav>
+    </header>
+
+    <section class="analytics-hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Advanced Analytics Models</h1>
+                <p>Our comprehensive suite of machine learning and AI models transforms your multi-company data into actionable insights. Explore the models we'll implement to power your business intelligence.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="models-section" id="predictive">
+        <div class="container">
+            <div class="section-title">
+                <h2>Analytics Model Portfolio</h2>
+                <p>Designed to extract maximum value from your enterprise data across all your companies</p>
+            </div>
+
+            <div class="model-category">
+                <h3>Predictive Analytics Models</h3>
+                <div class="models-grid">
+                    <div class="model-card">
+                        <h4>Revenue Forecasting</h4>
+                        <p>Predict future revenue streams across all your companies with 95% accuracy using time series analysis and external market indicators.</p>
+                        <div class="model-meta">
+                            <span>Time Series Analysis</span>
+                            <span class="model-status status-production">In Production</span>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <h4>Customer Churn Prediction</h4>
+                        <p>Identify at-risk customers across your portfolio with 85% precision using behavioral pattern recognition.</p>
+                        <div class="model-meta">
+                            <span>Classification</span>
+                            <span class="model-status status-production">In Production</span>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <h4>Inventory Demand Forecasting</h4>
+                        <p>Optimize inventory levels across all locations by predicting product demand with seasonal adjustments.</p>
+                        <div class="model-meta">
+                            <span>Regression</span>
+                            <span class="model-status status-development">In Development</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="model-category" id="prescriptive">
+                <h3>Prescriptive Analytics Models</h3>
+                <div class="models-grid">
+                    <div class="model-card">
+                        <h4>Optimal Pricing Strategy</h4>
+                        <p>Recommend dynamic pricing adjustments across product lines and companies to maximize profitability.</p>
+                        <div class="model-meta">
+                            <span>Optimization</span>
+                            <span class="model-status status-production">In Production</span>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <h4>Resource Allocation Advisor</h4>
+                        <p>AI-driven recommendations for optimal distribution of personnel and budget across your companies.</p>
+                        <div class="model-meta">
+                            <span>Linear Programming</span>
+                            <span class="model-status status-development">In Development</span>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <h4>Cross-Company Synergy Finder</h4>
+                        <p>Identify collaboration opportunities between your different businesses to reduce costs and increase efficiency.</p>
+                        <div class="model-meta">
+                            <span>Cluster Analysis</span>
+                            <span class="model-status status-planned">Planned</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="model-category" id="diagnostic">
+                <h3>Diagnostic Analytics Models</h3>
+                <div class="models-grid">
+                    <div class="model-card">
+                        <h4>Anomaly Detection Engine</h4>
+                        <p>Automatically detect unusual patterns in financial transactions, inventory movements, and operational metrics.</p>
+                        <div class="model-meta">
+                            <span>Unsupervised Learning</span>
+                            <span class="model-status status-production">In Production</span>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <h4>Root Cause Analyzer</h4>
+                        <p>Trace performance issues to their source across interconnected company data systems.</p>
+                        <div class="model-meta">
+                            <span>Graph Theory</span>
+                            <span class="model-status status-development">In Development</span>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <h4>Comparative Performance Analysis</h4>
+                        <p>Benchmark individual company performance against peers and industry standards.</p>
+                        <div class="model-meta">
+                            <span>Statistical Analysis</span>
+                            <span class="model-status status-production">In Production</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="model-details">
+        <div class="container">
+            <div class="details-container">
+                <div class="details-header">
+                    <h3>Model Implementation Details</h3>
+                    <p>Technical specifications for our analytics pipeline</p>
+                </div>
+                <div class="details-content">
+                    <div class="details-column">
+                        <h4>Data Pipeline Architecture</h4>
+                        <ul class="details-list">
+                            <li>Real-time data ingestion from multiple sources</li>
+                            <li>Automated data validation and cleansing</li>
+                            <li>Cross-company data normalization</li>
+                            <li>Feature engineering pipeline</li>
+                            <li>Model training and validation framework</li>
+                        </ul>
+                        
+                        <h4 style="margin-top: 2rem;">Model Deployment</h4>
+                        <ul class="details-list">
+                            <li>Containerized microservices architecture</li>
+                            <li>Continuous integration/delivery pipeline</li>
+                            <li>Canary deployment strategy</li>
+                            <li>Automatic rollback on failure</li>
+                            <li>Performance monitoring dashboard</li>
+                        </ul>
+                    </div>
+                    <div class="details-column">
+                        <h4>Technology Stack</h4>
+                        <div class="tech-stack">
+                            <span class="tech-item">Python</span>
+                            <span class="tech-item">TensorFlow</span>
+                            <span class="tech-item">PyTorch</span>
+                            <span class="tech-item">Scikit-learn</span>
+                            <span class="tech-item">Pandas</span>
+                            <span class="tech-item">NumPy</span>
+                            <span class="tech-item">Spark</span>
+                            <span class="tech-item">Kafka</span>
+                            <span class="tech-item">Docker</span>
+                            <span class="tech-item">Kubernetes</span>
+                            <span class="tech-item">AWS SageMaker</span>
+                            <span class="tech-item">Snowflake</span>
+                        </div>
+                        
+                        <h4 style="margin-top: 2rem;">Model Monitoring</h4>
+                        <ul class="details-list">
+                            <li>Real-time performance tracking</li>
+                            <li>Data drift detection</li>
+                            <li>Concept drift monitoring</li>
+                            <li>Automated retraining triggers</li>
+                            <li>Business impact assessment</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section" id="contact">
+        <div class="container">
+            <h2>Ready to Deploy Advanced Analytics?</h2>
+            <p>Our data science team can customize these models to your specific multi-company requirements.</p>
+            <a href="mailto:analytics@hillsdataworld.com" class="btn-primary">Request Technical Consultation</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Hills Data World</h3>
+                    <p>Advanced analytics and AI solutions for enterprise data management across multiple companies.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Analytics Services</h3>
+                    <p><a href="#predictive">Predictive Models</a></p>
+                    <p><a href="#prescriptive">Prescriptive Models</a></p>
+                    <p><a href="#diagnostic">Diagnostic Models</a></p>
+                    <p><a href="hills_data_world_website.html#services">All Services</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p>Email: analytics@hillsdataworld.com</p>
+                    <p>Phone: +1 (555) 987-6543</p>
+                    <p>Support: support@hillsdataworld.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Hills Data World. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Animate model cards on scroll
+        const animateCards = () => {
+            const cards = document.querySelectorAll('.model-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease';
+                observer.observe(card);
+            });
+        };
+
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', animateCards);
+    </script>
+</body>
+</html>

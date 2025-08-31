@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Models - Hills Data World</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #495057;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            max-width: 180px;
+            height: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #6c757d;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #495057;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+            font-size: 0.9rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+        }
+
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .menu-toggle span {
+            width: 100%;
+            height: 3px;
+            background-color: #495057;
+            border-radius: 5px;
+            transition: all 0.3s linear;
+            position: relative;
+            transform-origin: 1px;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+            padding: 140px 0 60px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23adb5bd" stroke-width="1" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .page-header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            animation: fadeInUp 1s ease;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        /* Industry Navigation */
+        .industry-nav {
+            background: white;
+            padding: 2rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 70px;
+            z-index: 999;
+        }
+
+        .industry-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .industry-btn {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: #6c757d;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .industry-btn:hover, .industry-btn.active {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            border-color: #495057;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.2);
+        }
+
+        /* Models Section */
+        .models-section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #495057;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: #6c757d;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .industry-section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 150px;
+        }
+
+        .industry-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .industry-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .industry-header h2 {
+            font-size: 2rem;
+            color: #495057;
+        }
+
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .model-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .model-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 0;
+            background: linear-gradient(to bottom, #6c757d, #495057);
+            transition: all 0.5s ease;
+        }
+
+        .model-card:hover::before {
+            height: 100%;
+        }
+
+        .model-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .model-card h3 {
+            font-size: 1.4rem;
+            color: #495057;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .model-card:hover h3 {
+            color: #343a40;
+        }
+
+        .model-card p {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .model-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .model-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-production {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-development {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-planned {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .model-features {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .model-features li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        .model-features li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #495057;
+            font-weight: bold;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #495057;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: #f8f9fa;
+        }
+
+        /* Footer */
+        footer {
+            background: #212529;
+            color: #adb5bd;
+            padding: 40px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #adb5bd;
+            text-decoration: none;
+            line-height: 1.8;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #495057;
+            padding-top: 1rem;
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                align-items: center;
+                padding: 2rem;
+                gap: 1.5rem;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+            
+            .cta-button {
+                display: none;
+            }
+            
+            .mobile-cta {
+                display: block;
+                margin-top: 1rem;
+                text-align: center;
+            }
+            
+            .page-header {
+                padding: 120px 0 50px;
+            }
+            
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .page-header p {
+                font-size: 1.1rem;
+            }
+            
+            .industry-nav {
+                top: 60px;
+                padding: 1rem 0;
+            }
+            
+            .industry-buttons {
+                gap: 0.5rem;
+            }
+            
+            .industry-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .industry-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .industry-icon {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .models-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .model-card {
+                padding: 1.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .logo img {
+                max-width: 150px;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .industry-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .industry-header h2 {
+                font-size: 1.7rem;
+            }
+            
+            .model-card {
+                padding: 1.2rem;
+            }
+            
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="hills_data_world_website.html" class="logo">
+                <img src="Hillsdataworldlogo2.png" alt="Hills Data World logo" width="200" height="auto">
+                <span class="sr-only"></span>
+            </a>
+
+            <button class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="hills_data_world_website.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="hills_data_world_website.html#features">Features</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li class="mobile-cta"><a href="#contact" class="cta-button">Get Started</a></li>
+            </ul>
+            <a href="#contact" class="cta-button">Get Started</a>
+        </nav>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <div class="page-header-content">
+                <h1>Advanced Analytics Models</h1>
+                <p>Explore our industry-specific machine learning and AI models designed to transform data into actionable intelligence across diverse sectors.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="industry-nav">
+        <div class="container">
+            <div class="industry-buttons">
+                <button class="industry-btn active" data-industry="space">Space Data Models</button>
+                <button class="industry-btn" data-industry="crime">Crime Intelligence</button>
+                <button class="industry-btn" data-industry="finance">Financial Analytics</button>
+                <button class="industry-btn" data-industry="healthcare">Healthcare Analytics</button>
+                <button class="industry-btn" data-industry="retail">Retail & E-commerce</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="models-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Industry-Specific Analytics Solutions</h2>
+                <p>Custom-built models designed to address unique challenges across different sectors</p>
+            </div>
+
+            <!-- Space Data Models -->
+            <div class="industry-section" id="space">
+                <div class="industry-header">
+                    <div class="industry-icon">
+                        <i class="fas fa-satellite"></i>
+                    </div>
+                    <h2>Space Data Analytics</h2>
+                </div>
+                <div class="models-grid">
+                    <div class="model-card">
+                        <h3>Satellite Imagery Analysis</h3>
+                        <p>AI-powered analysis of satellite imagery for environmental monitoring, urban planning, and defense applications.</p>
+                        <ul class="model-features">
+                            <li>Object detection and classification</li>
+                            <li>Change detection over time</li>
+                            <li>Multi-spectral analysis</li>
+                            <li>Anomaly detection</li>
+                        </ul>
+                        <div class="model-meta">
+                            <span>Computer Vision</span>
+                            <span class="model-status status-production">In Production</span>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <h3>Orbital Debris Tracking</h3>
+                        <p>Predictive models for tracking and forecasting space debris trajectories to protect satellite infrastructure.</p>
+                        <ul class="model-features">
+                            <li>Collision probability forecasting</li>
+                            <li>Orbital path prediction</li>
+                            <li>Risk assessment models</li>
+                            <li>Evasion maneuver planning</li>
+                        </ul>
+                        <div class="model-meta">
+                            <span>Predictive Analytics</span>
+                            <span class="model-status status-development">In Development</span>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <h3>Space Weather Forecasting</h3>
+                        <p>Machine learning models to predict space weather events that can impact satellite operations and communications.</p>
+                        <ul class="model-features">
+                            <li>Solar flare prediction</li>
+                            <li>Geomagnetic storm forecasting</li>
+                            <li>Signal interference analysis</li>
+                            <li>Impact assessment</li>
+                        </ul>
+                        <div class="model-meta">
+                            <span>Time Series Analysis</span>
+                            <span class="model-status status-production">In Production</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crime Intelligence -->
+            <div class="industry-section" id="crime">
+                <div class="industry-header">
+                    <div class="industry-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h2>Crime Intelligence Analytics</h2>
+                </div>
+                <div class="models-grid">
+                    <div class="model-card">
+                        <h3>Predictive Policing</h3>
+                        <p>AI models that analyze historical crime data to predict potential crime hotspots and allocate resources efficiently.</p>
+                        <ul class="model-features">
+                            <li>Crime pattern recognition</li>
+                            <li>Hotspot forecasting</li>
+                            <li>Resource optimization</li>
+                            <li>Seasonal trend analysis</li>
+                        </ul>
+                        <div class="model-meta">
+                            <span>Predictive Analytics</span>
+                            <span class="model-status status-production">In Production</span>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <h3>Cybercrime Detection</h3>
+                        <p>Advanced algorithms to detect and prevent cyber threats, fraud, and online criminal activities.</p>
+                        <ul class="model-features">
+                            <li>Network anomaly detection</li>
+                            <li>Behavioral analysis</li>
+                            <li>Threat intelligence integration</li>
+                            <li>Real-time monitoring</li>
+                        </ul>
+                        <div class="model-meta">
+                            <span>Anomaly Detection</span>
+                            <span class="model-status status-development">In Development</span>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <h3>Criminal Network Analysis</h3>
+                        <p>Graph-based models to identify and analyze criminal networks, relationships, and organizational structures.</p>
+                        <ul class="model-features">
+                            <li>Social network analysis</li>
+                            <li>Link prediction</li>
+                            <li>Community detection</li>
+                            <li>Influence mapping</li>
+                        </ul>
+                        <div class="model-meta">
+                            <span>Graph Theory</span>
+                            <span class="model-status status-production">In Production</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Analytics -->
+            <div class="industry-section" id="finance">
+                <div class="industry-header">
+                    <div class="industry-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h2>Financial Analytics</h2>
+                </div>
+                <div class="models-grid">
+                    <div class="model-card">
+                        <h3>Algorithmic Trading</h3>
+                        <p>ML-driven trading algorithms that analyze market data to identify profitable trading opportunities.</p>
+                        <ul class="model-features">
+                            <li>Market sentiment analysis</li>
+                            <li>Price prediction models</li>
+                            <li>Risk management</li>
+                            <li>Portfolio optimization</li>
+                        </ul>
+                        <div class="model-meta">
+                            <span>Time Series</span>
+                            <span class="model-status status-production">In Production</span>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <h3>Fraud Detection System</h3>
+                        <p>Real-time detection of fraudulent transactions and activities across financial networks.</p>
+                        <ul class="model-features">
+                            <li>Real-time monitoring</li>
+                            <li>Pattern recognition</li>
+                            <li>Behavioral analytics</li>
+                            <li>Adaptive learning</li>
+                        </ul>
+                        <div class="model-meta">
+                            <span>Anomaly Detection</span>
+                            <span class="model-status status-production">In Production</span>
+                        </div>
+                    </div>
+                    <div class="model-card">
+                        <h3>Credit Risk Assessment</h3>
+                        <p>Advanced scoring models that evaluate creditworthiness using alternative data and machine learning.</p>
+                        <ul class="model-features">
+                            <li>Alternative data integration</li>
+                            <li>Default prediction</li>
+                            <li>Risk segmentation</li>
+                            <li>Regulatory compliance</li>
+                        </ul>
+                        <div class="model-meta">
+                            <span>Predictive Analytics</span>
+                            <span class="model-status status-development">In Development</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional industry sections would follow the same pattern -->
+
+        </div>
+    </section>
+
+    <section class="cta-section" id="contact">
+        <div class="container">
+            <h2>Need Custom Analytics Solutions?</h2>
+            <p>Our data science team can develop tailored models for your specific industry requirements.</p>
+            <a href="mailto:models@hillsdataworld.com" class="btn-primary">Request a Demo</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Hills Data World</h3>
+                    <p>Advanced analytics and AI solutions for enterprise data management across multiple companies.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Analytics Models</h3>
+                    <p><a href="#space">Space Data Models</a></p>
+                    <p><a href="#crime">Crime Intelligence</a></p>
+                    <p><a href="#finance">Financial Analytics</a></p>
+                    <p><a href="#healthcare">Healthcare Analytics</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p>Email: models@hillsdataworld.com</p>
+                    <p>Phone: +1 (555) 987-6543</p>
+                    <p>Support: support@hillsdataworld.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Hills Data World. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuToggle.classList.remove('active');
+            });
+        });
+
+        // Industry navigation
+        const industryButtons = document.querySelectorAll('.industry-btn');
+        const industrySections = document.querySelectorAll('.industry-section');
+        
+        industryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const industry = button.getAttribute('data-industry');
+                
+                // Update active button
+                industryButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Scroll to section
+                document.getElementById(industry).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Highlight active industry section on scroll
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    industryButtons.forEach(button => {
+                        if (button.getAttribute('data-industry') === id) {
+                            industryButtons.forEach(btn => btn.classList.remove('active'));
+                            button.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        industrySections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if(this.getAttribute('href') !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Animate model cards on scroll
+        const animateCards = () => {
+            const cards = document.querySelectorAll('.model-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease';
+                observer.observe(card);
+            });
+        };
+
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', animateCards);
+    </script>
+</body>
+</html>
